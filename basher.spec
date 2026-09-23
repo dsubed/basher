@@ -14,7 +14,7 @@ rm -rf %{buildroot}
 cp -r %{_sourcedir}/* %{buildroot}
 
 %files
-/usr/local/bin/viruschecker
+/usr/local/bin/basher
 
 %changelog
 * Mon Sep 21 2026 Linus Larsson linus.larsson@smhi.se
