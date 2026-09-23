@@ -1,0 +1,39 @@
+# parse argument to variables command and context
+command="$1"
+context="$2"
+shift 2
+case "$command" in
+    register)
+        echo "Register alias: $context"
+        # to get remember the alias we make softlinks in ~/.basher
+        mkdir -p ~/.basher
+        base_context=`basename "$context"`
+        ln -s `realpath "$context"` ~/.basher/"$base_context"
+        ;;
+    rm)
+        echo "Removing alias for: $context"
+        rm -f ~/.basher/`basename "$context"`
+        ;;
+    rm-all)
+        echo "Removing all aliases"
+        aliases=`ls ~/.basher`
+        unalias $aliases 2>/dev/null
+        rm -f ~/.basher/*
+        ;;
+    init)
+        echo "Adding Basher to PATH in ~/.bashrc. Please restart your terminal or run 'source ~/.bashrc'"
+        echo '# Basher initialization should be last post in ~/.bashrc for best results' >> ~/.bashrc
+        echo 'export PATH=$HOME/.basher:$PATH' >> ~/.bashrc
+        ;;
+    drop)
+        echo "Dropping basher path in ~/.bashrc. Please restart your terminal or run 'source ~/.bashrc'"
+        sed -i -e 's|export PATH=$HOME/.basher:$PATH||' ~/.bashrc
+        ;;
+    list)
+        echo "Listing all aliases"
+        ls ~/.basher
+        ;;
+    *)
+        echo "Unknown command: $command"
+        ;;
+esac
